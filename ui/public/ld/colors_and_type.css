@@ -1,0 +1,336 @@
+/* =============================================================================
+   LaunchDarkly — Color & Type Tokens
+   Sources: launchpad-ui (public design system), brand colors (#405BFF primary),
+   marketing site typography.
+   ============================================================================= */
+
+/* Fonts: LaunchDarkly's full Söhne family (provided) + Sora variable (provided).
+   Söhne (sans), Söhne Breit (wide), Söhne Schmal (condensed), Söhne Mono.
+   All weights 200–900, with italics (Kursiv). No CDN fonts needed. */
+
+@font-face {
+  font-family: 'Sora';
+  src: url('fonts/Sora-VariableFont_wght.ttf') format('truetype-variations');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Söhne — primary body + UI */
+@font-face { font-family:'Söhne'; src:url('fonts/So_hne-Extraleicht.otf') format('opentype');           font-weight:200; font-style:normal; font-display:swap; }
+@font-face { font-family:'Söhne'; src:url('fonts/So_hne-ExtraleichtKursiv.otf') format('opentype');     font-weight:200; font-style:italic; font-display:swap; }
+@font-face { font-family:'Söhne'; src:url('fonts/So_hne-Leicht.otf') format('opentype');                font-weight:300; font-style:normal; font-display:swap; }
+@font-face { font-family:'Söhne'; src:url('fonts/So_hne-LeichtKursiv.otf') format('opentype');          font-weight:300; font-style:italic; font-display:swap; }
+@font-face { font-family:'Söhne'; src:url('fonts/So_hne-Buch.otf') format('opentype');                  font-weight:400; font-style:normal; font-display:swap; }
+@font-face { font-family:'Söhne'; src:url('fonts/So_hne-BuchKursiv.otf') format('opentype');            font-weight:400; font-style:italic; font-display:swap; }
+@font-face { font-family:'Söhne'; src:url('fonts/So_hne-Kra_ftig.otf') format('opentype');              font-weight:500; font-style:normal; font-display:swap; }
+@font-face { font-family:'Söhne'; src:url('fonts/So_hne-Kra_ftigKursiv.otf') format('opentype');        font-weight:500; font-style:italic; font-display:swap; }
+@font-face { font-family:'Söhne'; src:url('fonts/So_hne-Halbfett.otf') format('opentype');              font-weight:600; font-style:normal; font-display:swap; }
+@font-face { font-family:'Söhne'; src:url('fonts/So_hne-HalbfettKursiv.otf') format('opentype');        font-weight:600; font-style:italic; font-display:swap; }
+@font-face { font-family:'Söhne'; src:url('fonts/So_hne-Dreiviertelfett.otf') format('opentype');       font-weight:700; font-style:normal; font-display:swap; }
+@font-face { font-family:'Söhne'; src:url('fonts/So_hne-DreiviertelfettKursiv.otf') format('opentype'); font-weight:700; font-style:italic; font-display:swap; }
+@font-face { font-family:'Söhne'; src:url('fonts/So_hne-Fett.otf') format('opentype');                  font-weight:800; font-style:normal; font-display:swap; }
+@font-face { font-family:'Söhne'; src:url('fonts/So_hne-FettKursiv.otf') format('opentype');            font-weight:800; font-style:italic; font-display:swap; }
+@font-face { font-family:'Söhne'; src:url('fonts/So_hne-Extrafett.otf') format('opentype');             font-weight:900; font-style:normal; font-display:swap; }
+@font-face { font-family:'Söhne'; src:url('fonts/So_hne-ExtrafettKursiv.otf') format('opentype');       font-weight:900; font-style:italic; font-display:swap; }
+
+/* Söhne Breit — wide display cut */
+@font-face { font-family:'Söhne Breit'; src:url('fonts/So_hneBreit-Extraleicht.otf') format('opentype');     font-weight:200; font-style:normal; font-display:swap; }
+@font-face { font-family:'Söhne Breit'; src:url('fonts/So_hneBreit-Leicht.otf') format('opentype');          font-weight:300; font-style:normal; font-display:swap; }
+@font-face { font-family:'Söhne Breit'; src:url('fonts/So_hneBreit-Buch.otf') format('opentype');            font-weight:400; font-style:normal; font-display:swap; }
+@font-face { font-family:'Söhne Breit'; src:url('fonts/So_hneBreit-Kra_ftig.otf') format('opentype');        font-weight:500; font-style:normal; font-display:swap; }
+@font-face { font-family:'Söhne Breit'; src:url('fonts/So_hneBreit-Halbfett.otf') format('opentype');        font-weight:600; font-style:normal; font-display:swap; }
+@font-face { font-family:'Söhne Breit'; src:url('fonts/So_hneBreit-Dreiviertelfett.otf') format('opentype'); font-weight:700; font-style:normal; font-display:swap; }
+@font-face { font-family:'Söhne Breit'; src:url('fonts/So_hneBreit-Fett.otf') format('opentype');            font-weight:800; font-style:normal; font-display:swap; }
+@font-face { font-family:'Söhne Breit'; src:url('fonts/So_hneBreit-Extrafett.otf') format('opentype');       font-weight:900; font-style:normal; font-display:swap; }
+
+/* Söhne Schmal — condensed cut, use for data-dense UIs */
+@font-face { font-family:'Söhne Schmal'; src:url('fonts/So_hneSchmal-Buch.otf') format('opentype');            font-weight:400; font-style:normal; font-display:swap; }
+@font-face { font-family:'Söhne Schmal'; src:url('fonts/So_hneSchmal-Kra_ftig.otf') format('opentype');        font-weight:500; font-style:normal; font-display:swap; }
+@font-face { font-family:'Söhne Schmal'; src:url('fonts/So_hneSchmal-Halbfett.otf') format('opentype');        font-weight:600; font-style:normal; font-display:swap; }
+@font-face { font-family:'Söhne Schmal'; src:url('fonts/So_hneSchmal-Dreiviertelfett.otf') format('opentype'); font-weight:700; font-style:normal; font-display:swap; }
+
+/* Söhne Mono — code + tabular-numeric UI */
+@font-face { font-family:'Söhne Mono'; src:url('fonts/So_hneMono-Buch.otf') format('opentype');            font-weight:400; font-style:normal; font-display:swap; }
+@font-face { font-family:'Söhne Mono'; src:url('fonts/So_hneMono-BuchKursiv.otf') format('opentype');      font-weight:400; font-style:italic; font-display:swap; }
+@font-face { font-family:'Söhne Mono'; src:url('fonts/So_hneMono-Kra_ftig.otf') format('opentype');        font-weight:500; font-style:normal; font-display:swap; }
+@font-face { font-family:'Söhne Mono'; src:url('fonts/So_hneMono-Halbfett.otf') format('opentype');        font-weight:600; font-style:normal; font-display:swap; }
+@font-face { font-family:'Söhne Mono'; src:url('fonts/So_hneMono-Dreiviertelfett.otf') format('opentype'); font-weight:700; font-style:normal; font-display:swap; }
+
+:root {
+  /* -------- Core brand (per LD Brand Library 2026) -------- */
+  --ld-black:           #191919;   /* LD Black — primary dark surface & text */
+  --ld-white:           #FFFFFF;
+  --ld-ink:             #191919;   /* alias for ld-black */
+
+  /* Grayscale — authoritative brand book values */
+  --ld-gray-01:         #F8F8F8;
+  --ld-gray-02:         #D1D6D9;
+  --ld-gray-03:         #A7A9AC;
+  --ld-gray-04:         #6D6E71;
+  --ld-gray-05:         #414042;
+  --ld-gray-06:         #2C2C2C;
+
+  /* Legacy neutral-scale aliases (used throughout this system) */
+  --ld-n-50:            #F8F8F8;   /* = Gray 01 */
+  --ld-n-100:           #F2F2F2;   /* derived tint */
+  --ld-n-200:           #D1D6D9;   /* = Gray 02 */
+  --ld-n-300:           #A7A9AC;   /* = Gray 03 */
+  --ld-n-400:           #8A8C8F;   /* derived */
+  --ld-n-500:           #6D6E71;   /* = Gray 04 */
+  --ld-n-600:           #414042;   /* = Gray 05 */
+  --ld-n-700:           #2C2C2C;   /* = Gray 06 */
+  --ld-n-800:           #202020;
+  --ld-n-900:           #191919;   /* = LD Black */
+
+  /* -------- Base palette (brand book) -------- */
+  --ld-blue:            #405BFF;
+  --ld-blue-light:      #7084FF;
+  --ld-blue-dark:       #2A3BA6;
+  --ld-blue-600:        #2A3BA6;   /* hover/press */
+  --ld-blue-400:        #7084FF;
+  --ld-blue-100:        #E0E5FF;   /* derived tint */
+  --ld-blue-50:         #F0F2FF;   /* derived tint */
+
+  --ld-purple:          #A34FDE;
+  --ld-purple-light:    #B675E4;
+  --ld-purple-dark:     #6A3390;
+  --ld-violet:          #A34FDE;   /* alias */
+
+  --ld-pink:            #FF35A2;
+  --ld-pink-light:      #EE5DAC;
+  --ld-pink-dark:       #C51A77;
+
+  --ld-orange:          #FF9D29;
+  --ld-orange-light:    #FFB660;
+  --ld-orange-dark:     #D57B10;
+
+  --ld-cyan:            #3DD6F5;
+  --ld-cyan-light:      #6DE0F7;
+  --ld-cyan-dark:       #238CA3;
+
+  --ld-lime:            #DDFF46;
+  --ld-lime-light:      #EDFF9E;
+  --ld-lime-dark:       #ADD300;
+
+  /* Legacy aliases kept so preview cards continue to work */
+  --ld-coral:           #FF9D29;   /* was coral; brand orange */
+  --ld-peach:           #FFB660;
+
+  /* -------- Feedback / semantic -------- */
+  --ld-success:         #2EBD6B;
+  --ld-success-bg:      #E7F8EF;
+  --ld-warning:         #F5A623;
+  --ld-warning-bg:      #FFF3DB;
+  --ld-error:           #E5484D;
+  --ld-error-bg:        #FCE8E9;
+  --ld-info:            var(--ld-blue);
+  --ld-info-bg:         var(--ld-blue-50);
+
+  /* -------- Semantic (light theme default) -------- */
+  --ld-bg:              var(--ld-white);
+  --ld-bg-subtle:       var(--ld-n-50);
+  --ld-bg-raised:       var(--ld-white);
+  --ld-bg-inverse:      var(--ld-ink);
+  --ld-fg:              var(--ld-ink);      /* fg1 */
+  --ld-fg-muted:        var(--ld-n-600);    /* fg2 */
+  --ld-fg-subtle:       var(--ld-n-500);    /* fg3 */
+  --ld-fg-inverse:      var(--ld-white);
+  --ld-border:          var(--ld-n-200);
+  --ld-border-strong:   var(--ld-n-300);
+  --ld-accent:          var(--ld-blue);
+  --ld-accent-fg:       var(--ld-white);
+
+  /* -------- Gradients (brand book combinations — 2–3 base colors) -------- */
+  --ld-gradient-headline:        linear-gradient(90deg, #A34FDE 0%, #405BFF 100%);        /* Purple-Blue */
+  --ld-gradient-purple-blue:     linear-gradient(90deg, #A34FDE 0%, #405BFF 100%);
+  --ld-gradient-purple-pink:     linear-gradient(90deg, #A34FDE 0%, #FF35A2 100%);
+  --ld-gradient-cyan-blue:       linear-gradient(90deg, #3DD6F5 0%, #405BFF 100%);
+  --ld-gradient-cyan-lime:       linear-gradient(90deg, #3DD6F5 0%, #DDFF46 100%);
+  --ld-gradient-heat:            linear-gradient(90deg, #FF35A2 0%, #FF9D29 50%, #DDFF46 100%); /* Pink-Orange-Lime */
+  --ld-gradient-tri:             linear-gradient(90deg, #A34FDE 0%, #405BFF 50%, #3DD6F5 100%); /* Purple-Blue-Cyan */
+  --ld-gradient-ink:             linear-gradient(180deg, #191919 0%, #2C2C2C 100%);
+
+  /* -------- Typography families -------- */
+  --ld-font-display:    'Sora', 'Söhne', system-ui, sans-serif;
+  --ld-font-body:       'Söhne', system-ui, -apple-system, sans-serif;
+  --ld-font-mono:       'Söhne Mono', ui-monospace, monospace;
+  --ld-font-condensed:  'Söhne Schmal', 'Söhne', system-ui, sans-serif;
+  --ld-font-wide:       'Söhne Breit', 'Söhne', system-ui, sans-serif;
+
+  /* -------- Type scale -------- */
+  --ld-text-display-1:  clamp(56px, 7vw, 112px);
+  --ld-text-display-2:  clamp(40px, 5vw, 72px);
+  --ld-text-h1:         clamp(32px, 3.5vw, 48px);
+  --ld-text-h2:         32px;
+  --ld-text-h3:         24px;
+  --ld-text-h4:         20px;
+  --ld-text-body-lg:    18px;
+  --ld-text-body:       16px;
+  --ld-text-sm:         14px;
+  --ld-text-xs:         12px;
+  --ld-text-eyebrow:    13px; /* uppercased, letter-spaced */
+
+  --ld-lh-tight:        1.05;
+  --ld-lh-snug:         1.2;
+  --ld-lh-normal:       1.45;
+  --ld-lh-loose:        1.6;
+
+  /* -------- Spacing (launchpad-ui-style 4pt scale) -------- */
+  --ld-space-50:        2px;
+  --ld-space-100:       4px;
+  --ld-space-200:       8px;
+  --ld-space-300:       12px;
+  --ld-space-400:       16px;
+  --ld-space-500:       24px;
+  --ld-space-600:       32px;
+  --ld-space-700:       48px;
+  --ld-space-800:       64px;
+  --ld-space-900:       96px;
+
+  /* -------- Radii -------- */
+  --ld-radius-sm:       4px;
+  --ld-radius-md:       6px;    /* default button/input */
+  --ld-radius-lg:       10px;
+  --ld-radius-xl:       16px;
+  --ld-radius-2xl:      24px;
+  --ld-radius-pill:     9999px;
+
+  /* -------- Shadows (neutral ink-based, per brand grayscale) -------- */
+  --ld-shadow-xs:       0 1px 2px rgba(25,25,25,0.05);
+  --ld-shadow-sm:       0 1px 3px rgba(25,25,25,0.07), 0 1px 2px rgba(25,25,25,0.04);
+  --ld-shadow-md:       0 4px 12px rgba(25,25,25,0.08), 0 2px 4px rgba(25,25,25,0.04);
+  --ld-shadow-lg:       0 12px 28px rgba(25,25,25,0.12), 0 4px 8px rgba(25,25,25,0.06);
+  --ld-shadow-focus:    0 0 0 3px rgba(64,91,255,0.28);
+
+  /* -------- Borders -------- */
+  --ld-border-100:      1px;
+  --ld-border-200:      1.5px;
+  --ld-border-300:      2px;
+
+  /* -------- Motion -------- */
+  --ld-ease-standard:   cubic-bezier(0.2, 0, 0, 1);
+  --ld-ease-in:         cubic-bezier(0.4, 0, 1, 1);
+  --ld-ease-out:        cubic-bezier(0, 0, 0.2, 1);
+  --ld-dur-fast:        120ms;
+  --ld-dur-base:        200ms;
+  --ld-dur-slow:        360ms;
+}
+
+/* Dark theme — used on marketing hero, deck, some dashboards */
+[data-theme="dark"] {
+  --ld-bg:              var(--ld-ink);
+  --ld-bg-subtle:       var(--ld-n-900);
+  --ld-bg-raised:       var(--ld-n-800);
+  --ld-bg-inverse:      var(--ld-white);
+  --ld-fg:              var(--ld-white);
+  --ld-fg-muted:        #B7BCC7;
+  --ld-fg-subtle:       #7F8696;
+  --ld-fg-inverse:      var(--ld-ink);
+  --ld-border:          #2A2E38;
+  --ld-border-strong:   #3A3F4B;
+  --ld-accent-fg:       var(--ld-white);
+  --ld-info-bg:         rgba(64,91,255,0.14);
+}
+
+/* =============================================================================
+   Semantic element styles
+   ============================================================================= */
+
+html, body {
+  font-family: var(--ld-font-body);
+  font-size: var(--ld-text-body);
+  line-height: var(--ld-lh-normal);
+  color: var(--ld-fg);
+  background: var(--ld-bg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, .ld-h1 {
+  font-family: var(--ld-font-display);
+  font-size: var(--ld-text-h1);
+  line-height: var(--ld-lh-tight);
+  letter-spacing: -0.02em;
+  font-weight: 600;
+  color: var(--ld-fg);
+  margin: 0 0 var(--ld-space-500) 0;
+}
+h2, .ld-h2 {
+  font-family: var(--ld-font-display);
+  font-size: var(--ld-text-h2);
+  line-height: var(--ld-lh-snug);
+  letter-spacing: -0.015em;
+  font-weight: 600;
+  margin: 0 0 var(--ld-space-400) 0;
+}
+h3, .ld-h3 {
+  font-family: var(--ld-font-display);
+  font-size: var(--ld-text-h3);
+  line-height: var(--ld-lh-snug);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin: 0 0 var(--ld-space-300) 0;
+}
+h4, .ld-h4 {
+  font-family: var(--ld-font-display);
+  font-size: var(--ld-text-h4);
+  line-height: var(--ld-lh-snug);
+  font-weight: 600;
+  margin: 0 0 var(--ld-space-300) 0;
+}
+
+.ld-display-1 {
+  font-family: var(--ld-font-display);
+  font-size: var(--ld-text-display-1);
+  line-height: 0.95;
+  letter-spacing: -0.035em;
+  font-weight: 500;
+}
+.ld-display-2 {
+  font-family: var(--ld-font-display);
+  font-size: var(--ld-text-display-2);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-weight: 500;
+}
+
+p { margin: 0 0 var(--ld-space-400) 0; }
+
+.ld-body-lg { font-size: var(--ld-text-body-lg); line-height: var(--ld-lh-loose); color: var(--ld-fg-muted); }
+.ld-body    { font-size: var(--ld-text-body);    line-height: var(--ld-lh-normal); }
+.ld-sm      { font-size: var(--ld-text-sm);      line-height: var(--ld-lh-normal); color: var(--ld-fg-muted); }
+.ld-xs      { font-size: var(--ld-text-xs);      line-height: var(--ld-lh-normal); color: var(--ld-fg-subtle); }
+
+.ld-eyebrow {
+  font-family: var(--ld-font-body);
+  font-size: var(--ld-text-eyebrow);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ld-fg-muted);
+}
+
+code, .ld-code {
+  font-family: var(--ld-font-mono);
+  font-size: 0.92em;
+  background: var(--ld-n-100);
+  padding: 2px 6px;
+  border-radius: var(--ld-radius-sm);
+  color: var(--ld-ink);
+}
+
+a {
+  color: var(--ld-blue);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color var(--ld-dur-fast) var(--ld-ease-standard);
+}
+a:hover { border-bottom-color: currentColor; }
+
+.ld-gradient-text {
+  background: var(--ld-gradient-headline);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 180" fill="none">
+  <g transform="translate(0 20)" fill="#191919">
+    <path d="M99 3 c-2 2 -2 5 0 8 l39 58 L76 41 c-3 -2 -7 0 -8 3 -2 4 0 7 4 9 l74 36 L7 96 c-4 0 -7 3 -7 7 s3 7 7 7 l139 6 -74 36 c-4 2 -5 5 -4 9 2 3 5 5 8 3 l62 -27 -39 58 c-2 3 -2 6 0 8 3 2 6 2 9 -1 L222 122 c3 -3 3 -10 0 -12 L108 4 c-3 -3 -6 -3 -9 -1 z"></path>
+  </g>
+  <text x="260" y="115" font-family="&#39;Space Grotesk&#39;,&#39;Graphik&#39;,&#39;Inter&#39;,sans-serif" font-size="78" font-weight="700" letter-spacing="-3" fill="#191919">LaunchDarkly</text>
+</svg>
