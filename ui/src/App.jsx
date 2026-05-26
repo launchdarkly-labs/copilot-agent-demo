@@ -1,10 +1,12 @@
 import { useState, useRef, useEffect } from "react";
+import { useFlags } from "launchdarkly-react-client-sdk";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import "./App.css";
 
 function App() {
   const [count, setCount] = useState(0);
+  const { aiChatEnabled = true } = useFlags();
 
   return (
     <main className="page">
@@ -51,7 +53,21 @@ function App() {
 
       <div className="divider" />
 
-      <ChatPanel />
+      {aiChatEnabled ? (
+        <ChatPanel />
+      ) : (
+        <section className="chat">
+          <header className="chat-header">
+            <span className="chat-avatar" aria-hidden="true">
+              <img src="/ld/ld-arrow.svg" alt="" />
+            </span>
+            <div>
+              <h3>LaunchDarkly assistant</h3>
+              <span className="chat-status">Disabled by flag</span>
+            </div>
+          </header>
+        </section>
+      )}
 
       <footer className="footer">
         <span>© LaunchDarkly · Demo environment</span>
