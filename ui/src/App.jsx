@@ -1,10 +1,20 @@
 import { useState, useRef, useEffect } from "react";
+import { useFlags } from "launchdarkly-react-client-sdk";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import "./App.css";
 
+const CHAT_FEATURE_FLAG_KEY = import.meta.env.VITE_LD_CHAT_FLAG_KEY || "chat-feature";
+
+function toCamelCaseFlagKey(key) {
+  return key.replace(/-([a-z])/g, (_, char) => char.toUpperCase());
+}
+
 function App() {
   const [count, setCount] = useState(0);
+  const flags = useFlags();
+  const chatFeatureEnabled =
+    flags[CHAT_FEATURE_FLAG_KEY] ?? flags[toCamelCaseFlagKey(CHAT_FEATURE_FLAG_KEY)] ?? true;
 
   return (
     <main className="page">
@@ -51,7 +61,7 @@ function App() {
 
       <div className="divider" />
 
-      <ChatPanel />
+      {chatFeatureEnabled ? <ChatPanel /> : null}
 
       <footer className="footer">
         <span>© LaunchDarkly · Demo environment</span>
