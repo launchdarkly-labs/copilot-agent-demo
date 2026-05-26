@@ -1,8 +1,20 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
+import { useFlags } from "launchdarkly-react-client-sdk";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import "./App.css";
+
+const CHAT_FEATURE_FLAG_KEY = import.meta.env.VITE_LD_CHAT_FLAG_KEY || "chat-feature";
+
+function toCamelCaseFlagKey(key) {
+  return key.replace(/-([a-z])/g, (_, char) => char.toUpperCase());
+}
 
 function App() {
   const [count, setCount] = useState(0);
+  const flags = useFlags();
+  const chatFeatureEnabled =
+    flags[CHAT_FEATURE_FLAG_KEY] ?? flags[toCamelCaseFlagKey(CHAT_FEATURE_FLAG_KEY)] ?? true;
 
   return (
     <main className="page">
@@ -47,6 +59,10 @@ function App() {
         </div>
       </section>
 
+      <div className="divider" />
+
+      {chatFeatureEnabled ? <ChatPanel /> : null}
+
       <footer className="footer">
         <span>© LaunchDarkly · Demo environment</span>
       </footer>
@@ -54,5 +70,115 @@ function App() {
   );
 }
 
+function ChatPanel() {
+  const [messages, setMessages] = useState([
+    {
+      role: "assistant",
+      text: "Hey! I'm the LaunchDarkly demo assistant. Ask me anything about controlling agents in runtime.",
+    },
+  ]);
+  const [input, setInput] = useState("");
+  const [pending, setPending] = useState(false);
+  const listRef = useRef(null);
+
+  useEffect(() => {
+    if (listRef.current) {
+      listRef.current.scrollTop = listRef.current.scrollHeight;
+    }
+  }, [messages, pending]);
+
+  async function send(e) {
+    e.preventDefault();
+    const text = input.trim();
+    if (!text || pending) return;
+    setMessages((m) => [...m, { role: "user", text }]);
+    setInput("");
+    setPending(true);
+
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: text }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || `HTTP ${res.status}`);
+      }
+      setMessages((m) => [...m, { role: "assistant", text: data.reply }]);
+    } catch (err) {
+      setMessages((m) => [
+        ...m,
+        { role: "assistant", text: `⚠ ${err.message}`, error: true },
+      ]);
+    } finally {
+      setPending(false);
+    }
+  }
+
+  return (
+    <section className="chat">
+      <header className="chat-header">
+        <span className="chat-avatar" aria-hidden="true">
+          <img src="/ld/ld-arrow.svg" alt="" />
+        </span>
+        <div>
+          <h3>LaunchDarkly assistant</h3>
+          <span className="chat-status">
+            <span className="chat-status-dot" /> Online
+          </span>
+        </div>
+      </header>
+
+      <div className="chat-list" ref={listRef}>
+        {messages.map((m, i) => (
+          <div key={i} className={`chat-msg chat-msg-${m.role}`}>
+            <div
+              className="chat-bubble"
+              style={m.error ? { background: "var(--ld-error-bg)", color: "var(--ld-error)" } : undefined}
+            >
+              {m.role === "assistant" && !m.error ? (
+                <div className="md">
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                    {m.text}
+                  </ReactMarkdown>
+                </div>
+              ) : (
+                m.text
+              )}
+            </div>
+          </div>
+        ))}
+        {pending && (
+          <div className="chat-msg chat-msg-assistant">
+            <div className="chat-bubble chat-bubble-pending">
+              <span className="dot" />
+              <span className="dot" />
+              <span className="dot" />
+            </div>
+          </div>
+        )}
+      </div>
+
+      <form className="chat-input" onSubmit={send}>
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder={pending ? "Thinking…" : "Ask something…"}
+          aria-label="Message"
+          disabled={pending}
+        />
+        <button
+          type="submit"
+          className="btn btn-primary"
+          disabled={!input.trim() || pending}
+        >
+          Send
+        </button>
+      </form>
+    </section>
+  );
+}
 
 export default App;

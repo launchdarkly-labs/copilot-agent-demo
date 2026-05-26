@@ -8,10 +8,11 @@
     "dev": "node --watch index.js"
   },
   "dependencies": {
+    "@langchain/anthropic": "^1.4.0",
     "@langchain/core": "^1.1.47",
-    "@langchain/openai": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^17.4.2",
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "langchain": "^1.4.1"
   }
 }
