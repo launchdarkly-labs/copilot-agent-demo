@@ -11,6 +11,7 @@ A minimal full-stack demo showing how to wire a LangChain-powered agent into a R
 
 - Node.js 20+
 - A LaunchDarkly client-side ID
+- A LaunchDarkly API access token (only if you want the server to load the demo AI Config)
 - An Anthropic API key
 
 ## Setup
@@ -32,7 +33,14 @@ Create `server/.env`:
 ```
 ANTHROPIC_API_KEY=your-anthropic-api-key
 PORT=3001
+LD_PROJECT_KEY=copilot-agent-demo
+LD_AI_CONFIG_KEY=launchdarkly-demo-chat
+LD_ACCESS_TOKEN=your-launchdarkly-api-token
 ```
+
+The chat panel is gated by the LaunchDarkly flag `ai-chat-feature`.
+The server can also pull its model + prompt settings from the
+`launchdarkly-demo-chat` AI Config in the same project.
 
 ## Run
 

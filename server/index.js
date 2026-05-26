@@ -4,6 +4,7 @@ const express = require("express");
 const cors = require("cors");
 const { initChatModel } = require("langchain/chat_models/universal");
 const {
+  AIMessage,
   SystemMessage,
   HumanMessage,
 } = require("@langchain/core/messages");
@@ -25,17 +26,152 @@ Format every response in Markdown. Use:
 
 Do not wrap the entire response in a code block. Do not include HTML.`;
 
-const MODEL = process.env.MODEL_DEFAULT
+const DEFAULT_CHAT_CONFIG = {
+  model: process.env.MODEL_DEFAULT,
+  temperature: 0.4,
+  messages: [{ role: "system", content: SYSTEM_PROMPT }],
+};
+const LD_PROJECT_KEY = process.env.LD_PROJECT_KEY;
+const LD_AI_CONFIG_KEY = process.env.LD_AI_CONFIG_KEY;
+const LD_ACCESS_TOKEN = process.env.LD_ACCESS_TOKEN;
+const AI_CONFIG_CACHE_MS = Number.parseInt(
+  process.env.AI_CONFIG_CACHE_MS ?? "30000",
+  10
+);
 
-let modelPromise;
-function getModel() {
-  if (!modelPromise) {
-    modelPromise = initChatModel(
-      MODEL,
-      { temperature: 0.4 }
-    );
+let modelState = { key: null, promise: null };
+let chatConfigPromise;
+let cachedChatConfig = DEFAULT_CHAT_CONFIG;
+let cachedChatConfigAt = 0;
+
+function hasLaunchDarklyAiConfig() {
+  return Boolean(LD_PROJECT_KEY && LD_AI_CONFIG_KEY && LD_ACCESS_TOKEN);
+}
+
+function getModel(chatConfig) {
+  const modelKey = JSON.stringify({
+    model: chatConfig.model,
+    temperature: chatConfig.temperature,
+  });
+
+  if (!modelState.promise || modelState.key !== modelKey) {
+    modelState = {
+      key: modelKey,
+      promise: initChatModel(chatConfig.model, {
+        temperature: chatConfig.temperature,
+      }),
+    };
   }
-  return modelPromise;
+
+  return modelState.promise;
+}
+
+function normalizeChatConfig(variation = {}) {
+  const provider = variation.modelConfigKey?.split(".")[0]?.toLowerCase();
+  const model =
+    provider && variation.modelName
+      ? `${provider}:${variation.modelName}`
+      : DEFAULT_CHAT_CONFIG.model;
+  const temperature =
+    typeof variation.parameters?.temperature === "number"
+      ? variation.parameters.temperature
+      : DEFAULT_CHAT_CONFIG.temperature;
+  const messages = Array.isArray(variation.messages)
+    ? variation.messages.filter(
+        ({ role, content }) =>
+          typeof role === "string" &&
+          typeof content === "string" &&
+          content.trim()
+      )
+    : DEFAULT_CHAT_CONFIG.messages;
+
+  return {
+    model,
+    temperature,
+    messages: messages.length ? messages : DEFAULT_CHAT_CONFIG.messages,
+  };
+}
+
+async function fetchChatConfigFromLaunchDarkly() {
+  const response = await fetch(
+    `https://app.launchdarkly.com/api/v2/projects/${encodeURIComponent(
+      LD_PROJECT_KEY
+    )}/ai-configs/${encodeURIComponent(LD_AI_CONFIG_KEY)}`,
+    {
+      headers: {
+        Authorization: LD_ACCESS_TOKEN,
+        "LD-API-Version": "beta",
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(`LaunchDarkly AI config lookup failed with HTTP ${response.status}`);
+  }
+
+  const config = await response.json();
+  const variation =
+    config.variations?.find((item) => Array.isArray(item.messages) && item.messages.length) ??
+    config.variations?.[0];
+
+  return normalizeChatConfig(variation);
+}
+
+async function getChatConfig() {
+  if (!hasLaunchDarklyAiConfig()) {
+    return DEFAULT_CHAT_CONFIG;
+  }
+
+  const now = Date.now();
+  if (now - cachedChatConfigAt < AI_CONFIG_CACHE_MS) {
+    return cachedChatConfig;
+  }
+
+  if (!chatConfigPromise) {
+    chatConfigPromise = fetchChatConfigFromLaunchDarkly()
+      .then((chatConfig) => {
+        cachedChatConfig = chatConfig;
+        cachedChatConfigAt = Date.now();
+        return chatConfig;
+      })
+      .catch((err) => {
+        console.error("Failed to load AI config from LaunchDarkly:", err);
+        cachedChatConfig = DEFAULT_CHAT_CONFIG;
+        cachedChatConfigAt = Date.now();
+        return DEFAULT_CHAT_CONFIG;
+      })
+      .finally(() => {
+        chatConfigPromise = null;
+      });
+  }
+
+  return chatConfigPromise;
+}
+
+function buildPromptMessages(seedMessages, userInput) {
+  let hasRuntimeUserMessage = false;
+
+  const promptMessages = seedMessages.flatMap(({ role, content }) => {
+    switch (role) {
+      case "system":
+        return [new SystemMessage(content)];
+      case "assistant":
+        return [new AIMessage(content)];
+      case "user": {
+        const renderedContent = content.replace(/\{\{\s*message\s*\}\}/g, userInput);
+        hasRuntimeUserMessage ||= renderedContent !== content;
+        return [new HumanMessage(renderedContent)];
+      }
+      default:
+        return [];
+    }
+  });
+
+  if (!hasRuntimeUserMessage) {
+    promptMessages.push(new HumanMessage(userInput));
+  }
+
+  return promptMessages;
 }
 
 app.use(cors());
@@ -56,11 +192,11 @@ app.post("/api/chat", async (req, res) => {
   }
 
   try {
-    const m = await getModel();
-    const response = await m.invoke([
-      new SystemMessage(SYSTEM_PROMPT),
-      new HumanMessage(message),
-    ]);
+    const chatConfig = await getChatConfig();
+    const m = await getModel(chatConfig);
+    const response = await m.invoke(
+      buildPromptMessages(chatConfig.messages, message)
+    );
     res.json({ reply: response.content });
   } catch (err) {
     console.error("LangChain error:", err);
